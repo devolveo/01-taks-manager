@@ -25,6 +25,19 @@ function App() {
 
     setTasks([...tasks, newTask]);
   }
+
+  function deleteTask(id: number) {
+    setTasks(tasks.filter((task) => task.id !== id));
+  }
+
+  function toggleTask(id: number) {
+    setTasks(
+      tasks.map((task) =>
+        task.id === id ? { ...task, completed: !task.completed } : task
+      )
+    );
+  }
+
   return (
     <div className="app">
       <header>
@@ -36,8 +49,11 @@ function App() {
           {tasks.map((task) => (
             <TaskItem
               key={task.id}
+              id={task.id}
               title={task.title}
               completed={task.completed}
+              onDelete={deleteTask}
+              onToggle={toggleTask}
             />
           ))}
         </div>

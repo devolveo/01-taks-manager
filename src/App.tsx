@@ -1,19 +1,45 @@
+import { useState } from "react";
 import TaskItem from "./components/TaskItem";
 import "./App.css";
 import TaskForm from "./components/TaskForm";
 
+interface Task {
+  id: number;
+  title: string;
+  completed: boolean;
+}
+
 function App() {
+  const [tasks, setTasks] = useState<Task[]>([
+    { id: 1, title: "Learn React", completed: true },
+    { id: 2, title: "Learn Props", completed: true },
+    { id: 3, title: "Build Task Manager", completed: false },
+  ]);
+
+  function addTask(title: string) {
+    const newTask: Task = {
+      id: Date.now(),
+      title: title,
+      completed: false,
+    };
+
+    setTasks([...tasks, newTask]);
+  }
   return (
     <div className="app">
       <header>
         <h1>My Task Manager</h1>
       </header>
       <main>
-        <TaskForm />
+        <TaskForm onAddTask={addTask} />
         <div className="task-list">
-          <TaskItem title="Learn React" completed={true} />
-          <TaskItem title="Learn Props" completed={true} />
-          <TaskItem title="Build Task Manager" completed={false} />
+          {tasks.map((task) => (
+            <TaskItem
+              key={task.id}
+              title={task.title}
+              completed={task.completed}
+            />
+          ))}
         </div>
       </main>
     </div>

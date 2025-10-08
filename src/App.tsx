@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import TaskItem from "./components/TaskItem";
 import "./App.css";
 import TaskForm from "./components/TaskForm";
@@ -23,13 +23,17 @@ function loadTasksFromStorage(): Task[] {
       return parsed;
     }
   } catch (error) {
-    console.error("Failed to load task: ", error);
+    console.error("❌ Failed to load tasks: ", error);
     return [];
   }
 }
 
 function App() {
   const [tasks, setTasks] = useState<Task[]>(() => loadTasksFromStorage());
+
+  useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }, [tasks]);
 
   function addTask(title: string) {
     const newTask: Task = {

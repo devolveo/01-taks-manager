@@ -9,6 +9,25 @@ interface Task {
   completed: boolean;
 }
 
+function loadTasksFromStorage(): Task[] {
+  try {
+    const savedTasks = localStorage.getItem("tasks");
+
+    if (savedTasks === null) {
+      return [];
+    }
+
+    const parsed = JSON.parse(savedTasks);
+
+    if (Array.isArray(parsed)) {
+      return parsed;
+    }
+  } catch (error) {
+    console.error("Failed to load task: ", error);
+    return [];
+  }
+}
+
 function App() {
   const [tasks, setTasks] = useState<Task[]>([
     { id: 1, title: "Learn React", completed: true },

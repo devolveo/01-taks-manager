@@ -29,11 +29,7 @@ function loadTasksFromStorage(): Task[] {
 }
 
 function App() {
-  const [tasks, setTasks] = useState<Task[]>([
-    { id: 1, title: "Learn React", completed: true },
-    { id: 2, title: "Learn Props", completed: true },
-    { id: 3, title: "Build Task Manager", completed: false },
-  ]);
+  const [tasks, setTasks] = useState<Task[]>(() => loadTasksFromStorage());
 
   function addTask(title: string) {
     const newTask: Task = {

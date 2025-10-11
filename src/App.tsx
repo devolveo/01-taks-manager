@@ -1,7 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useCallback } from "react";
 import TaskItem from "./components/TaskItem";
 import "./App.css";
 import TaskForm from "./components/TaskForm";
+import useLocalStorage from "./hooks/useLocalStorage";
+import useDebounce from "./hooks/useDebounce";
 
 interface Task {
   id: number;
@@ -9,53 +11,50 @@ interface Task {
   completed: boolean;
 }
 
-function loadTasksFromStorage(): Task[] {
-  try {
-    const savedTasks = localStorage.getItem("tasks");
-
-    if (savedTasks === null) {
-      return [];
-    }
-
-    const parsed = JSON.parse(savedTasks);
-
-    if (Array.isArray(parsed)) {
-      return parsed;
-    }
-  } catch (error) {
-    console.error("❌ Failed to load tasks: ", error);
-    return [];
-  }
-}
-
 function App() {
-  const [tasks, setTasks] = useState<Task[]>(() => loadTasksFromStorage());
+  const [tasks, setTasks] = useLocalStorage<Task[]>("task", []);
+  const [searchTerm, setSearchTerm] = useState("");
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
-  useEffect(() => {
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-  }, [tasks]);
+  const filteredTasks = tasks.filter((task: Task) => {
+    console.log("Filtering with:", debouncedSearchTerm);
+    return task.title
+      .toLowerCase()
+      .includes(debouncedSearchTerm.toLocaleLowerCase());
+  });
 
-  function addTask(title: string) {
-    const newTask: Task = {
-      id: Date.now(),
-      title: title,
-      completed: false,
-    };
+  const addTask = useCallback(
+    (title: string) => {
+      const newTask: Task = {
+        id: Date.now(),
+        title: title,
+        completed: false,
+      };
 
-    setTasks([...tasks, newTask]);
-  }
+      setTasks((prevTasks: Task[]) => [...prevTasks, newTask]);
+    },
+    [setTasks]
+  );
 
-  function deleteTask(id: number) {
-    setTasks(tasks.filter((task) => task.id !== id));
-  }
+  const deleteTask = useCallback(
+    (id: number) => {
+      setTasks((prevTasks: Task[]) =>
+        prevTasks.filter((task) => task.id !== id)
+      );
+    },
+    [setTasks]
+  );
 
-  function toggleTask(id: number) {
-    setTasks(
-      tasks.map((task) =>
-        task.id === id ? { ...task, completed: !task.completed } : task
-      )
-    );
-  }
+  const toggleTask = useCallback(
+    (id: number) => {
+      setTasks((prevTasks: Task[]) =>
+        prevTasks.map((task) =>
+          task.id === id ? { ...task, completed: !task.completed } : task
+        )
+      );
+    },
+    [setTasks]
+  );
 
   return (
     <div className="app">
@@ -63,9 +62,17 @@ function App() {
         <h1>My Task Manager</h1>
       </header>
       <main>
+        <input
+          type="text"
+          placeholder="Search tasks..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="search-input"
+        />
         <TaskForm onAddTask={addTask} />
+
         <div className="task-list">
-          {tasks.map((task) => (
+          {filteredTasks.map((task: Task) => (
             <TaskItem
               key={task.id}
               id={task.id}

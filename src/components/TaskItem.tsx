@@ -7,7 +7,8 @@ interface TaskItemProps {
   onToggle: (id: number) => void;
 }
 
-function TaskItem(props: TaskItemProps) {
+// function TaskItem(props: TaskItemProps) {
+const TaskItem = React.memo(function TaskItem(props: TaskItemProps) {
   function handleDelete() {
     props.onDelete(props.id);
   }
@@ -36,6 +37,6 @@ function TaskItem(props: TaskItemProps) {
       </div>
     </>
   );
-}
+});
 
 export default TaskItem;

@@ -1,104 +1,25 @@
-.app {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 20px;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-header {
-  text-align: center;
-  margin-bottom: 30px;
-}
+@layer components {
+  .task-card {
+    animation: none;
+  }
 
-header h1 {
-  color: #333;
-  font-size: 2rem;
-}
+  .task-card.task-completed {
+    animation: taskComplete 0.3s ease-out;
+  }
 
-.task-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.task-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 15px;
-  background: #f0f0f0;
-  border-radius: 8px;
-}
-
-.task-item input[type="checkbox"] {
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
-}
-
-.task-item span {
-  flex: 1;
-  font-size: 1rem;
-}
-
-.task-item button {
-  padding: 5px 15px;
-  background: #ff4444;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.task-item button:hover {
-  background: #cc0000;
-}
-
-/* TASKFORM */
-.task-form {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-.task-form input {
-  flex: 1;
-  padding: 10px;
-  border: 2px solid #ddd;
-  border-radius: 5px;
-  font-size: 1rem;
-}
-
-.task-form input:focus {
-  outline: none;
-  border-color: #4caf50;
-}
-
-.task-form button {
-  padding: 10px 20px;
-  background-color: #4caf50;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 1rem;
-  font-weight: 500;
-}
-
-.task-form button:hover {
-  background: #45a049;
-}
-
-.search-input {
-  width: 100%;
-  padding: 12px;
-  margin-bottom: 20px;
-  border: 2px solid #e0e0e0;
-  border-radius: 8px;
-  font-size: 16px;
-  box-sizing: border-box;
-}
-
-.search-input:focus {
-  outline: none;
-  border-color: #4caf50;
+  @keyframes taskComplete {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.02);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
 }

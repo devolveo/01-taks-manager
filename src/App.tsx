@@ -5,6 +5,7 @@ import TaskForm from "./components/TaskForm";
 import useLocalStorage from "./hooks/useLocalStorage";
 import useDebounce from "./hooks/useDebounce";
 import DarkModeToggle from "./components/DarkModeToggle";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 interface Task {
   id: number;
@@ -94,14 +95,25 @@ function App() {
             )}
             {filteredTasks.length > 0 &&
               filteredTasks.map((task: Task) => (
-                <TaskItem
+                <ErrorBoundary
                   key={task.id}
-                  id={task.id}
-                  title={task.title}
-                  completed={task.completed}
-                  onDelete={deleteTask}
-                  onToggle={toggleTask}
-                />
+                  fallback={
+                    <div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+                      <p className="text-red-600 dark:text-red-400 text-sm">
+                        ⚠️ This task failed to load
+                      </p>
+                    </div>
+                  }
+                >
+                  <TaskItem
+                    key={task.id}
+                    id={task.id}
+                    title={task.title}
+                    completed={task.completed}
+                    onDelete={deleteTask}
+                    onToggle={toggleTask}
+                  />
+                </ErrorBoundary>
               ))}
           </div>
         </main>

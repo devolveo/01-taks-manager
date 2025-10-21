@@ -58,6 +58,7 @@ function App() {
     },
     [setTasks]
   );
+
   console.timeEnd("⏱️ App Render Time");
 
   return (

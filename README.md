@@ -4,9 +4,7 @@ A responsive task manager developed with React, TypeScript, and Tailwind CSS. It
 
 **Live Demo:** [https://01-taks-manager-2dvu.vercel.app/](https://01-taks-manager-2dvu.vercel.app/)
 
-![Task Manager Preview](image-1.png)
-
-## ![alt text](image.png)
+![Task Manager Preview](./public/screenshots/taskManager.png)
 
 ## Features
 

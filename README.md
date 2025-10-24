@@ -18,8 +18,6 @@ A responsive task manager developed with React, TypeScript, and Tailwind CSS. It
 - ️**Error Boundaries** - Simple yet elegant error handling
 - **Accessible** - Semantic HTML and keyboard navigation
 
----
-
 ## Tech Stack
 
 **Frontend:**

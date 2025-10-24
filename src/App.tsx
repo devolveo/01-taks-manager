@@ -6,6 +6,7 @@ import useLocalStorage from "./hooks/useLocalStorage";
 import useDebounce from "./hooks/useDebounce";
 import DarkModeToggle from "./components/DarkModeToggle";
 import ErrorBoundary from "./components/ErrorBoundary";
+import FetchPosts from "./exercises/FetchPosts";
 
 interface Task {
   id: number;
@@ -64,6 +65,7 @@ function App() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+        <FetchPosts />
         <header className="flex items-center justify-between mb-6 sm:mb-8">
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
             My Task Manager

@@ -47,7 +47,7 @@ function FetchPosts() {
     }
   }
 
-  // call function
+  // call function–
   useEffect(() => {
     fetchPosts();
   }, []);

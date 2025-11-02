@@ -1,7 +1,5 @@
 import { NavLink } from "react-router-dom";
 
-import React from "react";
-
 function Navigation() {
   return (
     <nav className="bg-white dark:bg-gray-800 shadow-md">
@@ -37,6 +35,16 @@ function Navigation() {
               }
             >
               About
+            </NavLink>
+            <NavLink
+              to="/posts"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-blue-600 dark:text-blue-400 font-bold border-b-2 border-blue-600 dark:border-blue-400"
+                  : "text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 font-medium"
+              }
+            >
+              Posts
             </NavLink>
           </div>
         </div>

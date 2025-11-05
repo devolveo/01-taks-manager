@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 
 // type for single post
 type Post = {
@@ -24,6 +24,7 @@ async function fetchPostById(id: string): Promise<Post> {
 function PostDetailPage() {
   // Step 1: Extract id from URL
   const { id } = useParams();
+  const navigate = useNavigate();
 
   // Step 2: Fetch post using that id
   const {
@@ -67,6 +68,20 @@ function PostDetailPage() {
         >
           ← Back to Posts
         </Link>
+
+        <button
+          onClick={() => {
+            if (confirm("Delete this post?")) {
+              // alert("Post deleted! redirecting...");
+              navigate("/posts", {
+                state: { message: "Post deleted successfully" },
+              });
+            }
+          }}
+          className="ml-4 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+        >
+          Delete Post
+        </button>
         {/* Post content */}
         <article className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
           <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">

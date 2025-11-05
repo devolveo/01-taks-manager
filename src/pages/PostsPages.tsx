@@ -1,5 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams, useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
+import useDebounce from "../hooks/useDebounce";
 
 // Type for a post
 type Post = {
@@ -29,6 +31,38 @@ function PostsPage() {
     queryFn: fetchPosts,
   });
 
+  const [searchParams, setSearchParams] = useSearchParams();
+  const location = useLocation();
+  const [searchTerm, setSearchTerm] = useState(
+    searchParams.get("search") || ""
+  );
+
+  const debouncedSearch = useDebounce(searchTerm, 300);
+  const message = location.state?.message;
+
+  // Update URL only when debounced value differs from current URL
+  useEffect(() => {
+    const currentUrlSearch = searchParams.get("search") || "";
+
+    if (debouncedSearch !== currentUrlSearch) {
+      if (debouncedSearch) {
+        setSearchParams({ search: debouncedSearch });
+      } else {
+        setSearchParams({});
+      }
+    }
+  }, [debouncedSearch, setSearchParams, searchParams]);
+
+  // Sync searchTerm when URL changes (back/forward navigation)
+  useEffect(() => {
+    const search = searchParams.get("search") || "";
+    setSearchTerm(search);
+  }, [searchParams]);
+
+  const filteredPosts = posts?.filter((post) =>
+    post.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -57,8 +91,28 @@ function PostsPage() {
           All Posts
         </h1>
 
+        {message && (
+          <div className="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+            <p className="text-green-800 dark:text-green-200">✓ {message}</p>
+          </div>
+        )}
+
+        <div className="mb-6">
+          <input
+            type="text"
+            placeholder="Search post by title"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full max-w-md px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          {searchTerm && (
+            <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
+              Found {filteredPosts?.length} posts matching "{searchTerm}"
+            </p>
+          )}
+        </div>
         <div className="space-y-4">
-          {posts?.map((post) => (
+          {filteredPosts?.map((post) => (
             <div
               key={post.id}
               className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow"
